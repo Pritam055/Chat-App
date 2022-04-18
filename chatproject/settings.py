@@ -37,6 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'channels',
+
+    # own
+    'chats',
+
 ]
 
 MIDDLEWARE = [
@@ -54,7 +60,10 @@ ROOT_URLCONF = 'chatproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'templates',
+
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,8 +76,18 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'chatproject.wsgi.application'
+# WSGI_APPLICATION = 'chatproject.wsgi.application'
+ASGI_APPLICATION = 'chatproject.asgi.application'
 
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
