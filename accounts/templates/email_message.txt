@@ -1,0 +1,7 @@
+Hello {{username|safe}}, Hope you are going great.
+
+Here is a linke to activate your account for "Chat App":
+{{url|safe}}
+
+
+Thank you!

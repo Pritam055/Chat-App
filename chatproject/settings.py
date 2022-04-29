@@ -37,7 +37,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'channels',
+    'crispy_forms',
+
+    # own
+    'chats', 
+    'accounts'
+
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -54,7 +64,10 @@ ROOT_URLCONF = 'chatproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'templates',
+
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,8 +80,18 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'chatproject.wsgi.application'
+# WSGI_APPLICATION = 'chatproject.wsgi.application'
+ASGI_APPLICATION = 'chatproject.asgi.application'
 
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -121,3 +144,20 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# OWN
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+
+# email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ybaworld2020@gmail.com' 
+EMAIL_HOST_PASSWORD = 'ypfmbufjqrbagvpj'
+DEFAULT_FROM_EMAIL = 'ybaworld2020@gmail.com'
+
+# message broker 
+# CELERY_BROKER_URL = 'amqp://localhost'

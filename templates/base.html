@@ -1,0 +1,165 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>{% block title %} {% endblock %}</title>
+    <style>
+      .error{
+        color: red;
+      }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+          <a class="navbar-brand" href="{% url 'home' %}">ChatApp</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+              </li>   
+              
+              {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Logout</a>
+                </li> 
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'login' %}" id="login-btn-id">Login</a>
+              </li> 
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'signup' %}" id="signup-btn-id">SignUp</a>
+              </li> 
+              {% endif %}
+            </ul> 
+          </div>
+        </div>
+      </nav>
+
+    <div class="container mt-2">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="modal-id">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" id="modal-content">
+
+        </div>
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+    <script>
+ 
+      function closeModal(){ 
+        $('#modal-id').hide();
+      }
+
+      // login-------------------
+      $('#login-btn-id').click( (e) => {
+        e.preventDefault();
+        const login_url = e.target.url;
+
+        $.get(login_url, (response) => {
+          $('#modal-content').html(response);
+          $('#modal-id').show(300);
+        })
+      })
+      
+      // signup------------------
+      $('#signup-btn-id').click( (e) =>{
+        e.preventDefault();
+        const signup_url = e.target.href;
+
+        $.get(signup_url, (response)=>{
+            $('#modal-content').html(response);
+            $('#modal-id').show(300)
+        })
+      }) 
+
+      $('.modal').on('submit','#signup-form-id', function(e){
+        e.preventDefault();
+        let form = new FormData(this);
+        const url = "{% url 'signup' %}";
+
+        // for(let i of form.entries()){
+        //   console.log(i);
+        // }
+
+        $.ajax({
+          type: "POST",
+          url : url,
+          data: form,
+          processData: false,
+          contentType: false,
+
+          success: function(response){
+            // console.log(response);
+            if(response.status){ 
+              $('#signup-form-id').trigger("reset");
+
+              // remove error tags too while success
+              els = ['username', 'email', 'password']
+              for(let i=0;i<els.length;i++ ){
+                if ($('#'+els[i] + '_error_id').length > 0){
+                  $('#'+els[i] + '_error_id').remove();
+                } 
+              }
+
+              alert('signUp success');
+            }else{
+              // console.log(response.errors, typeof(response.errors))
+              err = response.errors 
+              
+              /* for(let el in err){
+                  // console.log(el, err[el], err[el][0]); 
+                  if ($('#'+el + '_error_id').length > 0){
+                    $('#'+el + '_error_id').remove();
+                  }
+                  $('#div_id_' + el).append(`<span id='${el}_error_id' class='error'>${err[el][0]}<span>` );
+                } */
+              
+              els = ['username','email', 'password']
+
+              for(let i=0;i<els.length;i++ ){
+                if ($('#'+els[i] + '_error_id').length > 0){
+                  $('#'+els[i] + '_error_id').remove();
+                }
+                // check if element exists in error response
+                if (err.hasOwnProperty(els[i])){
+                  $('#div_id_' + els[i]).append(`<span id='${els[i]}_error_id' class='error'>${err[els[i]][0]}<span>` );
+                }
+              }
+
+            }
+          },
+          error: function(response){ 
+            let data = JSON.parse(response['responseText']);
+            // console.log(typeof(data), data);  
+ 
+          }
+
+
+        })
+
+      })
+      
+
+    </script>
+    {% block script %}
+    {% endblock %}
+    
+</body>
+</html>

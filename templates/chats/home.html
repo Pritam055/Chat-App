@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+
+<div class="row">    
+    <div class="col-4 mx-auto">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <h3>Join Groups</h3>
+        <hr>
+        <ul>    
+        {% for group in group_list %}
+            <li><a href="{{ group.get_absolute_url }}">{{ group.name }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+  
+{% endblock %}

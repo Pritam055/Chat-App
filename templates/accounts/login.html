@@ -1,0 +1,21 @@
+{% load crispy_forms_tags %}
+
+
+<form method="post" id="login-form-id" novalidate>
+    <div class="modal-header">
+        <h5 class="modal-title">Login User</h5>  
+    </div>
+
+    <div class="modal-body">
+        {% csrf_token %} 
+        {{ form|crispy }} 
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Login</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Close</button>
+    </div>
+
+</form>
+

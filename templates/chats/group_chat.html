@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %} Chat {% endblock %}
+
+{% block content %}
+
+<div class="row"> 
+        
+        <div class="col-3 mx-auto">
+            <h3>Groups</h3>
+            <hr>
+            <ul>
+                {% for group in group_list %}
+                    <li><a href="{{ group.get_absolute_url }}">{{ group.name }}</a> </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="col-8 mx-auto"> 
+            <div style="display:flex; justify-content: space-between;">
+                <h2>Chats - <span class="badge rounded-pill bg-info">{{ group.name }}</span> </h2>
+                <h2>User - <span class="badge rounded-pill bg-secondary">{{request.user.username}}</span></h2>
+            </div>
+            <hr>
+            <div class="form-control overflow-auto" id="chat-log" style="height: 300px;">
+                {% for chat in chats %}
+                    <p>{{ chat.user.username }} >>> {{ chat.content }} </p>
+                {% endfor %}
+            </div><br>
+            <input type="text"t class="form-control" id="chat-message-input" placeholder="Type message here..."><br>
+            <button id="message-button" class="btn btn-success px-5">Send</button>
+        </div>
+
+</div>
+{{ group.name|json_script:"groupname_id" }}
+
+{% endblock %}
+
+{% block script %}
+<script>    
+    const value = JSON.parse(document.getElementById('groupname_id').textContent);
+    const ws = new WebSocket('ws://127.0.0.1:8000/ws/sc/' + value + '/');
+
+    ws.onopen = function(event){
+        console.log('WebSocket opened')
+    }
+
+    ws.onmessage = function(event){
+        console.log(event.data);
+        const data = JSON.parse(event.data);
+        let chatlogDom = document.getElementById('chat-log');
+        if (data['alert']){
+            alert(data['message']);
+        }else{
+            el = document.createElement('p');
+            el.textContent = data['user'] + ' >>> ' + data['message'];
+            chatlogDom.appendChild(el);
+        }
+    }
+
+    ws.close = function(event){
+        console.log('Websocket closed') 
+    }
+
+    document.getElementById('message-button').addEventListener('click', function(e){
+        const messageDOM = document.getElementById('chat-message-input');
+        ws.send(JSON.stringify({'message': messageDOM.value}));
+        messageDOM.value = '';
+
+    })
+    
+</script>
+{% endblock %}
