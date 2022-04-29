@@ -1,8 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.urls import reverse  
+from django.conf import settings 
 
 # Create your models here.
+
+User = settings.AUTH_USER_MODEL
 
 class Group(models.Model):
     name = models.CharField(max_length = 50, unique=True)

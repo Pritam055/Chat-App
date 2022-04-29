@@ -1,6 +1,7 @@
 from typing import List
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView 
+
 
 from chats.models import Chat, Group
 # Create your views here.
@@ -31,3 +32,5 @@ class GroupChatView(DetailView):
         context['chats'] = chats
         context['group_list'] = Group.objects.all() 
         return context 
+
+ 
