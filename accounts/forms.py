@@ -31,9 +31,13 @@ class UserCreationForm(django_forms.ModelForm):
         return email.lower()
 
 
-    # def clean(self, *args, **kwargs): 
-    #     cleaned_data = super().clean() 
-    
+    def save(self, commit=True): 
+        user = super(UserCreationForm, self).save(commit=False)
+        user.set_password(user.password)
+        user.save()
+        return user 
+
+
 class UserLoginForm(django_forms.Form):
     username = django_forms.CharField(max_length=200)
     password = django_forms.CharField(max_length=200, widget=django_forms.PasswordInput())

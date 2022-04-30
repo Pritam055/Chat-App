@@ -42,6 +42,7 @@ class CreateUserView(View):
             obj.token = token 
             obj.save()
             send_mail_task.delay(obj.username, obj.email, url)
+            messages.info(request, 'Please! check your mail inbox to activate your account.')
 
             return JsonResponse({'status': True}, status=200)
         print(form.errors)
@@ -70,8 +71,13 @@ class LoginUserView(View):
             user = authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
             print(user)
             if user:
-                login(self.request, user)
-                return JsonResponse({'status': True}, status=200)
+                if user.activated:
+                    login(self.request, user)
+                    messages.success(request, 'Login success. Now you can message.')
+                    return JsonResponse({'status': True}, status=200)
+                else:
+                    messages.warning(request, 'Your account is not activated yet. Please! check your mail inbox.')
+                    return JsonResponse({'status': True}, status=200)
         print(form.errors)
         return JsonResponse({'status': False}, status=200)
     

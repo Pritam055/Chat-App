@@ -46,7 +46,7 @@
     }
 
     ws.onmessage = function(event){
-        console.log(event.data);
+        // console.log(event.data);
         const data = JSON.parse(event.data);
         let chatlogDom = document.getElementById('chat-log');
         if (data['alert']){

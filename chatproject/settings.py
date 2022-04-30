@@ -160,4 +160,4 @@ EMAIL_HOST_PASSWORD = 'ypfmbufjqrbagvpj'
 DEFAULT_FROM_EMAIL = 'ybaworld2020@gmail.com'
 
 # message broker 
-# CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_BROKER_URL = 'amqp://localhost'

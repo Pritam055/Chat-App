@@ -42,7 +42,7 @@
               {% endif %}
             </ul> 
           </div>
-        </div>
+        </div>  
       </nav>
 
     <div class="container mt-2">
@@ -57,8 +57,7 @@
 
             </div>
           </div>  
-        </div> 
-
+        </div>  
 
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
@@ -82,12 +81,11 @@
       $('.modal').on('submit', '#login-form-id', function(e){
         e.preventDefault();
         let form = new FormData(this);
-        const url = "{% url 'login' %}";
-        console.log(url);
+        const url = "{% url 'login' %}"; 
 
-        for(let i of form.entries()){
-          console.log(i);
-        }
+        // for(let i of form.entries()){
+        //   console.log(i);
+        // }
 
         $.ajax({
           type: 'POST',
@@ -98,7 +96,7 @@
 
           success: function(response){
             if (response['status']){
-              alert('Login success');
+              // alert('Login success');
               window.location.reload();
 
             }else{
@@ -145,14 +143,15 @@
               $('#signup-form-id').trigger("reset");
 
               // remove error tags too while success
-              els = ['username', 'email', 'password']
+              /* els = ['username', 'email', 'password']
               for(let i=0;i<els.length;i++ ){
                 if ($('#'+els[i] + '_error_id').length > 0){
                   $('#'+els[i] + '_error_id').remove();
                 } 
-              }
-
-              alert('signUp success');
+              } */
+              // alert('signUp success');
+              window.location.reload();
+              
             }else{
               // console.log(response.errors, typeof(response.errors))
               err = response.errors 
@@ -182,15 +181,11 @@
           error: function(response){ 
             let data = JSON.parse(response['responseText']);
             // console.log(typeof(data), data);  
- 
           }
-
-
         })
 
       })
       
-
     </script>
     {% block script %}
     {% endblock %}
