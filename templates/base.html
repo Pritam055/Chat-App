@@ -50,13 +50,14 @@
         {% endblock %}
     </div>
 
-    <div class="modal" tabindex="-1" role="dialog" id="modal-id">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content" id="modal-content">
+     
+        <div class="modal" tabindex="-1" role="dialog" id="modal-id">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content" id="modal-content">
 
-        </div>
-      </div>
-    </div>
+            </div>
+          </div>  
+        </div> 
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
@@ -70,14 +71,47 @@
       // login-------------------
       $('#login-btn-id').click( (e) => {
         e.preventDefault();
-        const login_url = e.target.url;
+        const login_url = e.target.href; 
 
-        $.get(login_url, (response) => {
+        $.get(login_url, (response) => { 
           $('#modal-content').html(response);
           $('#modal-id').show(300);
         })
       })
       
+      $('.modal').on('submit', '#login-form-id', function(e){
+        e.preventDefault();
+        let form = new FormData(this);
+        const url = "{% url 'login' %}";
+        console.log(url);
+
+        for(let i of form.entries()){
+          console.log(i);
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: url,
+          data: form,
+          processData: false,
+          contentType: false,
+
+          success: function(response){
+            if (response['status']){
+              alert('Login success');
+              window.location.reload();
+
+            }else{
+              alert('Invalid username/password');
+            }
+          },
+          errors: function(response){
+            console.log(response)
+          }
+
+        })
+      })
+
       // signup------------------
       $('#signup-btn-id').click( (e) =>{
         e.preventDefault();

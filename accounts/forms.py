@@ -34,10 +34,9 @@ class UserCreationForm(django_forms.ModelForm):
     # def clean(self, *args, **kwargs): 
     #     cleaned_data = super().clean() 
     
-class UserLoginForm(django_forms.ModelForm):
-
-    class Meta:
-        model = User
-        fields = ['username', 'password']
+class UserLoginForm(django_forms.Form):
+    username = django_forms.CharField(max_length=200)
+    password = django_forms.CharField(max_length=200, widget=django_forms.PasswordInput())
+ 
 
     
